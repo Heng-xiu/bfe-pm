@@ -24,7 +24,7 @@ Evaluated on ~50k de-identified surgical records from a de-identified institutio
 ### Installation
 
 ```bash
-git clone https://github.com/Heng666/bfe-pm.git
+git clone https://github.com/Heng-xiu/bfe-pm.git
 cd bfe-pm
 pip install -r requirements.txt
 ```
