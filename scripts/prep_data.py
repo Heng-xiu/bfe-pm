@@ -1,4 +1,4 @@
-"""Preprocess surgical_records.xls → processed.parquet.
+"""Preprocess surgical records XLS → processed.parquet.
 
 Usage:
     python scripts/prep_data.py --input surgical_records.xls --output data/processed.parquet
