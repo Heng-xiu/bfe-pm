@@ -58,9 +58,9 @@ result = predictor.predict(
     operation_text="腹腔鏡膽囊切除術",
     scheduled_duration=90,     # surgeon's estimate in minutes
     anesthesia="GA",
-    surgery_category="常規刀",
+    surgery_type="常規刀",
     shift="白班",
-    weekday=1,                 # 0=Monday, 6=Sunday
+    weekday_str="星期二",       # recommended: Chinese string, avoids int mapping ambiguity
 )
 
 print(result)
@@ -94,9 +94,9 @@ curl -X POST http://localhost:8080/predict \
     "operation_text": "腹腔鏡膽囊切除術",
     "scheduled_duration": 90,
     "anesthesia": "GA",
-    "surgery_category": "常規刀",
+    "surgery_type": "常規刀",
     "shift": "白班",
-    "weekday": 1
+    "weekday_str": "星期二"
   }'
 ```
 
@@ -175,16 +175,15 @@ predictor = BfePmPredictor(local_checkpoint_dir="checkpoints/")
 
 ## Input Specification
 
-| Field | Type | Values |
-|-------|------|--------|
-| `operation_text` | str | Chinese procedure names; multiple joined with ` [SEP] ` |
-| `scheduled_duration` | float | Minutes (0 = unknown) |
-| `anesthesia` | str | GA \| EPI \| SA \| MAC \| Local \| Block \| IV |
-| `surgery_category` | str | 常規刀 \| 急診刀_Urgent \| 急刀_Emergency \| 日間手術 \| 門診手術 |
-| `shift` | str | 白班 \| 小夜 \| 大夜 |
-| `weekday` | int | 0=Monday … 6=Sunday |
-| `is_daytime` | bool | 日間手術 flag |
-| `is_outpatient` | bool | 門診手術 flag |
+| Field | Type | Values | Notes |
+|-------|------|--------|-------|
+| `operation_text` | str | Chinese procedure names | Multiple joined with ` [SEP] ` |
+| `scheduled_duration` | float | Minutes | 0 = unknown |
+| `anesthesia` | str | GA \| EPI \| SA \| MAC \| Local \| Block \| IV | |
+| `surgery_type` | str | 常規刀 \| 急診刀_Urgent \| 急刀_Emergency \| 日間手術 \| 門診手術 | `is_daytime`/`is_outpatient` auto-derived from this field |
+| `shift` | str | 白班 \| 小夜 \| 大夜 | |
+| `weekday_str` | str | 星期一 … 星期天 | **Recommended**; maps Monday=0 … Sunday=6 matching training |
+| `weekday` | int | 0=Monday … 6=Sunday | Fallback if `weekday_str` not provided; follows pandas `dayofweek` |
 
 ---
 

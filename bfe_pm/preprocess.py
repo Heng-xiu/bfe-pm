@@ -8,8 +8,9 @@ from transformers import AutoTokenizer
 ANESTHESIA_TYPES = ["EPI", "GA", "SA", "MAC", "Local", "Local(不照會麻醉科)", "Block", "IV", "other"]
 SURGERY_CATS     = ["急診刀_Urgent", "常規刀", "急刀_Emergency", "日間手術", "門診手術", "other"]
 SHIFT_TYPES      = ["白班", "小夜", "大夜", "unknown"]
-WEEKDAY_ZH = {"星期天": 0, "星期一": 1, "星期二": 2, "星期三": 3,
-               "星期四": 4, "星期五": 5, "星期六": 6}
+# Matches pandas dayofweek used in training (Monday=0 … Sunday=6)
+WEEKDAY_ZH = {"星期一": 0, "星期二": 1, "星期三": 2, "星期四": 3,
+               "星期五": 4, "星期六": 5, "星期天": 6}
 
 
 def _safe_encode(val: str, categories: list) -> int:
