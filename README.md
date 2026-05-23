@@ -199,18 +199,25 @@ predictor = BfePmPredictor(local_checkpoint_dir="checkpoints/")
 
 ## Citation
 
+If you use this code or model in your research, please cite the software repository:
+
 ```bibtex
-@article{bfe_pm_conformal_2025,
-  title   = {Conformalized Uncertainty Quantification for Surgical Duration Prediction:
-             From Marginal Intervals to Subgroup Exchangeability Failure},
-  journal = {IEEE Journal of Biomedical and Health Informatics},
-  year    = {2025},
-  journal = {IEEE Journal of Biomedical and Health Informatics}
+@software{bfe_pm_2025,
+  title        = {bfe-pm: Surgical Duration Prediction with Conformal Intervals},
+  author       = {Heng-xiu},
+  year         = {2025},
+  publisher    = {GitHub},
+  url          = {https://github.com/Heng-xiu/bfe-pm},
+  note         = {Dual-stream MedBERT-KD-Chinese + wide struct MLP with conformal prediction}
 }
 ```
+
+A `CITATION.cff` file is included in the repository root for GitHub's native "Cite this repository" support.
 
 ---
 
 ## License
 
-MIT License. Model weights are for research use only.
+**Code** (this repository): [MIT License](LICENSE)
+
+**Model weights**: Not publicly released. The trained checkpoints are held privately. If you are interested in using the model for non-commercial research purposes, please open a [GitHub Issue](https://github.com/Heng-xiu/bfe-pm/issues) describing your use case.
