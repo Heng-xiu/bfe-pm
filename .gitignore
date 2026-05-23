@@ -1,0 +1,23 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.env
+*.log
+
+# Model checkpoints (uploaded to HuggingFace Hub)
+checkpoints/*.pt
+
+# Data
+data/
+*.parquet
+*.xls
+*.xlsx
+
+# HuggingFace cache
+~/.cache/huggingface/
+
+# IDE
+.vscode/
+.idea/

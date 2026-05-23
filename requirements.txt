@@ -1,0 +1,7 @@
+# Inference + demo
+torch>=2.0
+transformers>=4.38
+huggingface-hub>=0.21
+gradio>=4.0
+matplotlib>=3.7
+numpy>=1.24
