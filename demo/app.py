@@ -13,11 +13,13 @@ from pathlib import Path
 
 import gradio as gr
 import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import numpy as np
 
-matplotlib.use("Agg")
+plt.rcParams['font.sans-serif'] = ['PingFang HK', 'STHeiti', 'Arial Unicode MS', 'DejaVu Sans']
+plt.rcParams['axes.unicode_minus'] = False
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from bfe_pm import BfePmPredictor
@@ -51,11 +53,9 @@ def predict_and_plot(
     operation_text: str,
     scheduled_duration: float,
     anesthesia: str,
-    surgery_category: str,
+    surgery_type: str,
     shift: str,
     weekday_str: str,
-    is_daytime: bool,
-    is_outpatient: bool,
 ):
     if not operation_text.strip():
         return "⚠️ 請輸入術式名稱", None, None
@@ -64,11 +64,9 @@ def predict_and_plot(
         operation_text=operation_text.strip(),
         scheduled_duration=scheduled_duration,
         anesthesia=anesthesia,
-        surgery_category=surgery_category,
+        surgery_type=surgery_type,
         shift=shift,
-        weekday=WEEKDAY_MAP.get(weekday_str, 0),
-        is_daytime=is_daytime,
-        is_outpatient=is_outpatient,
+        weekday_str=weekday_str,
         conformal=True,
     )
 
@@ -78,7 +76,7 @@ def predict_and_plot(
 
     # ── Summary text ─────────────────────────────────────────────────────────
     urgency_note = ""
-    if "急" in surgery_category:
+    if "急" in surgery_type:
         urgency_note = (
             "\n\n⚠️ **注意**：急診手術類別的 conformal 覆蓋率可能低於 90%（參見論文 §6）。"
             "此信賴區間適用於擇期手術（常規刀）。"
@@ -153,14 +151,17 @@ def predict_and_plot(
 def build_ui(checkpoint_dir: str = None):
     load_model(checkpoint_dir)
 
-    with gr.Blocks(title="bfe-pm 手術時長預測", theme=gr.themes.Soft()) as demo:
+    with gr.Blocks(title="bfe-pm 手術時長預測") as demo:
         gr.Markdown("""
 # 🏥 bfe-pm — 手術時長預測 Demo
 
 基於 **MedBERT-KD-Chinese + 寬結構特徵 MLP** 的雙流架構，提供點預測與 90% Conformal 信賴區間。
 
-> **論文**：*Conformalized Uncertainty Quantification for Surgical Duration Prediction* (IEEE JBHI, submitted)
-> **MAE**：33.8 分鐘（擇期手術） · **90% 覆蓋率**：89.6%
+> **論文**：*Conformalized Uncertainty Quantification for Surgical Duration Prediction*
+> IEEE Journal of Biomedical and Health Informatics (JBHI) format
+>
+> **MAE**：33.8 分鐘（擇期手術）
+> **90% 覆蓋率**：89.6%
         """)
 
         with gr.Row():
@@ -174,20 +175,12 @@ def build_ui(checkpoint_dir: str = None):
                 sched_dur = gr.Number(label="預訂耗時（分鐘，不確定可填 0）", value=0, minimum=0)
 
                 with gr.Row():
-                    anesthesia = gr.Dropdown(
-                        ANESTHESIA_OPTS, label="麻醉方式", value="GA"
-                    )
-                    surgery_cat = gr.Dropdown(
-                        SURGERY_CAT_OPTS, label="手術類別", value="常規刀"
-                    )
+                    anesthesia   = gr.Dropdown(ANESTHESIA_OPTS,  label="麻醉方式", value="GA")
+                    surgery_type = gr.Dropdown(SURGERY_CAT_OPTS, label="手術類別（surgery_type）", value="常規刀")
 
                 with gr.Row():
                     shift   = gr.Dropdown(SHIFT_OPTS,   label="班別",   value="白班")
                     weekday = gr.Dropdown(WEEKDAY_OPTS, label="手術星期", value="星期二")
-
-                with gr.Row():
-                    is_daytime   = gr.Checkbox(label="日間手術", value=False)
-                    is_outpatient = gr.Checkbox(label="門診手術", value=False)
 
                 predict_btn = gr.Button("▶ 預測", variant="primary", size="lg")
 
@@ -200,8 +193,7 @@ def build_ui(checkpoint_dir: str = None):
 
         predict_btn.click(
             fn=predict_and_plot,
-            inputs=[op_text, sched_dur, anesthesia, surgery_cat, shift, weekday,
-                    is_daytime, is_outpatient],
+            inputs=[op_text, sched_dur, anesthesia, surgery_type, shift, weekday],
             outputs=[result_md, timeline_plot, dist_plot],
         )
 
@@ -224,14 +216,13 @@ def build_ui(checkpoint_dir: str = None):
 
         gr.Examples(
             examples=[
-                ["腹腔鏡膽囊切除術", 60, "GA", "常規刀", "白班", "星期二", False, False],
-                ["剖腹產手術 [SEP] 子宮下段橫切剖腹取胎術", 60, "SA", "常規刀", "白班", "星期三", False, False],
-                ["全髖關節置換術", 120, "SA", "常規刀", "白班", "星期四", False, False],
-                ["冠狀動脈繞道手術 [SEP] 體外循環下心臟手術", 240, "GA", "常規刀", "白班", "星期一", False, False],
-                ["急診闌尾切除術", 60, "GA", "急診刀_Urgent", "小夜", "星期五", False, False],
+                ["腹腔鏡膽囊切除術", 60, "GA", "常規刀", "白班", "星期二"],
+                ["剖腹產手術 [SEP] 子宮下段橫切剖腹取胎術", 60, "SA", "常規刀", "白班", "星期三"],
+                ["全髖關節置換術", 120, "SA", "常規刀", "白班", "星期四"],
+                ["冠狀動脈繞道手術 [SEP] 體外循環下心臟手術", 240, "GA", "常規刀", "白班", "星期一"],
+                ["急診闌尾切除術", 60, "GA", "急診刀_Urgent", "小夜", "星期五"],
             ],
-            inputs=[op_text, sched_dur, anesthesia, surgery_cat, shift, weekday,
-                    is_daytime, is_outpatient],
+            inputs=[op_text, sched_dur, anesthesia, surgery_type, shift, weekday],
         )
 
     return demo
@@ -246,4 +237,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     demo = build_ui(args.checkpoint_dir)
-    demo.launch(server_port=args.port, share=args.share)
+    demo.launch(server_port=args.port, share=args.share, theme=gr.themes.Soft())

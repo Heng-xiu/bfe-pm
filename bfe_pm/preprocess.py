@@ -23,32 +23,28 @@ def _safe_encode(val: str, categories: list) -> int:
 def build_struct_tensor(
     scheduled_duration: float,
     anesthesia: str,
-    surgery_category: str,
+    surgery_type: str,
     shift: str,
     weekday: int,
-    is_daytime: bool = False,
-    is_outpatient: bool = False,
 ) -> torch.Tensor:
     """Encode 8 structured features into a float32 tensor.
 
     Args:
         scheduled_duration: surgeon-estimated minutes (0 if unknown)
         anesthesia: e.g. "GA", "EPI", "SA"
-        surgery_category: e.g. "常規刀", "急診刀_Urgent"
+        surgery_type: e.g. "常規刀", "急診刀_Urgent", "日間手術", "門診手術"
         shift: "白班" | "小夜" | "大夜"
-        weekday: 0=Monday … 6=Sunday
-        is_daytime: 日間手術 flag
-        is_outpatient: 門診手術 flag
+        weekday: 0=Monday … 6=Sunday (or use weekday_str with WEEKDAY_ZH)
     """
     feats = [
         min(float(scheduled_duration) / 300.0, 3.0),
-        _safe_encode(anesthesia,       ANESTHESIA_TYPES) / len(ANESTHESIA_TYPES),
-        _safe_encode(surgery_category, SURGERY_CATS)     / len(SURGERY_CATS),
-        _safe_encode(shift,            SHIFT_TYPES)      / len(SHIFT_TYPES),
+        _safe_encode(anesthesia,   ANESTHESIA_TYPES) / len(ANESTHESIA_TYPES),
+        _safe_encode(surgery_type, SURGERY_CATS)     / len(SURGERY_CATS),
+        _safe_encode(shift,        SHIFT_TYPES)      / len(SHIFT_TYPES),
         math.sin(2 * math.pi * weekday / 7),
         math.cos(2 * math.pi * weekday / 7),
-        1.0 if is_daytime   else 0.0,
-        1.0 if is_outpatient else 0.0,
+        1.0 if "日間" in str(surgery_type) else 0.0,
+        1.0 if "門診" in str(surgery_type) else 0.0,
     ]
     return torch.tensor(feats, dtype=torch.float32)
 

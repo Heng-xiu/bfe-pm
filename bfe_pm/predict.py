@@ -41,7 +41,7 @@ class BfePmPredictor:
             operation_text="腹腔鏡膽囊切除術",
             scheduled_duration=90,
             anesthesia="GA",
-            surgery_category="常規刀",
+            surgery_type="常規刀",
             shift="白班",
             weekday=1,
         )
@@ -88,12 +88,10 @@ class BfePmPredictor:
         operation_text: str,
         scheduled_duration: float = 0.0,
         anesthesia: str = "GA",
-        surgery_category: str = "常規刀",
+        surgery_type: str = "常規刀",
         shift: str = "白班",
-        weekday: int = 1,
-        is_daytime: bool = False,
-        is_outpatient: bool = False,
         weekday_str: Optional[str] = None,
+        weekday: int = 1,
         conformal: bool = True,
     ) -> Dict:
         """Predict surgical duration.
@@ -102,12 +100,10 @@ class BfePmPredictor:
             operation_text: Chinese procedure name(s), joined with ' [SEP] '
             scheduled_duration: surgeon estimated minutes (0 = unknown)
             anesthesia: GA | EPI | SA | MAC | Local | Block | IV
-            surgery_category: 常規刀 | 急診刀_Urgent | 急刀_Emergency | 日間手術 | 門診手術
+            surgery_type: 常規刀 | 急診刀_Urgent | 急刀_Emergency | 日間手術 | 門診手術
             shift: 白班 | 小夜 | 大夜
-            weekday: 0=Monday … 6=Sunday (overrides weekday_str)
-            is_daytime: 日間手術 flag
-            is_outpatient: 門診手術 flag
-            weekday_str: 星期一 … 星期天 (convenience alias)
+            weekday_str: 星期一 … 星期天 (takes priority over weekday)
+            weekday: 0=Monday … 6=Sunday (fallback if weekday_str not given)
             conformal: if True, also return 90% split conformal interval
 
         Returns:
@@ -120,8 +116,7 @@ class BfePmPredictor:
             operation_text, self.tokenizer, device=self.device
         )
         struct = build_struct_tensor(
-            scheduled_duration, anesthesia, surgery_category,
-            shift, weekday, is_daytime, is_outpatient,
+            scheduled_duration, anesthesia, surgery_type, shift, weekday,
         ).unsqueeze(0).to(self.device)
 
         with torch.no_grad():

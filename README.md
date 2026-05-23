@@ -2,7 +2,8 @@
 
 **bfe-pm** (*BERT Fusion Ensemble — Procedure Matched*) is a dual-stream neural network for surgical duration prediction, combining MedBERT-KD-Chinese text encoding with structured scheduling features. It provides point predictions and calibrated 90% prediction intervals via conformal prediction.
 
-> **Paper**: *Conformalized Uncertainty Quantification for Surgical Duration Prediction: From Marginal Intervals to Subgroup Exchangeability Failure* — submitted to IEEE JBHI
+> **Paper**: *Conformalized Uncertainty Quantification for Surgical Duration Prediction: From Marginal Intervals to Subgroup Exchangeability Failure*
+> IEEE Journal of Biomedical and Health Informatics (JBHI) format
 
 ---
 
@@ -203,7 +204,7 @@ predictor = BfePmPredictor(local_checkpoint_dir="checkpoints/")
              From Marginal Intervals to Subgroup Exchangeability Failure},
   journal = {IEEE Journal of Biomedical and Health Informatics},
   year    = {2025},
-  note    = {Submitted}
+  journal = {IEEE Journal of Biomedical and Health Informatics}
 }
 ```
 

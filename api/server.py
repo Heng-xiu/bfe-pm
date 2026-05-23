@@ -9,9 +9,9 @@ Request (POST /predict):
         "operation_text": "腹腔鏡膽囊切除術",
         "scheduled_duration": 90,
         "anesthesia": "GA",
-        "surgery_category": "常規刀",
+        "surgery_type": "常規刀",
         "shift": "白班",
-        "weekday": 1
+        "weekday_str": "星期二"
     }
 
 Response:
@@ -47,18 +47,14 @@ class SurgeryDurationAPI(LitAPI):
 
     def decode_request(self, request):
         body = request
-        weekday = body.get("weekday")
-        if weekday is None:
-            weekday = WEEKDAY_ZH.get(body.get("weekday_str", ""), 1)
         return {
-            "operation_text":  str(body.get("operation_text", "")),
+            "operation_text":     str(body.get("operation_text", "")),
             "scheduled_duration": float(body.get("scheduled_duration", 0)),
-            "anesthesia":      str(body.get("anesthesia",      "GA")),
-            "surgery_category": str(body.get("surgery_category", "常規刀")),
-            "shift":           str(body.get("shift",           "白班")),
-            "weekday":         int(weekday),
-            "is_daytime":      bool(body.get("is_daytime",     False)),
-            "is_outpatient":   bool(body.get("is_outpatient",  False)),
+            "anesthesia":         str(body.get("anesthesia",     "GA")),
+            "surgery_type":       str(body.get("surgery_type",   "常規刀")),
+            "shift":              str(body.get("shift",          "白班")),
+            "weekday_str":        body.get("weekday_str"),
+            "weekday":            int(body.get("weekday", 1)),
         }
 
     def predict(self, inputs):
