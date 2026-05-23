@@ -24,7 +24,7 @@ Evaluated on ~50k de-identified surgical records from a de-identified institutio
 ### Installation
 
 ```bash
-git clone https://github.com/your-username/bfe-pm.git
+git clone https://github.com/Heng666/bfe-pm.git
 cd bfe-pm
 pip install -r requirements.txt
 ```
@@ -35,15 +35,15 @@ Checkpoints are hosted on HuggingFace Hub:
 
 ```python
 from huggingface_hub import snapshot_download
-snapshot_download("your-username/bfe-pm", local_dir="checkpoints/")
+snapshot_download("Heng666/bfe-pm", local_dir="checkpoints/")
 ```
 
 Or download individual seeds:
 
 ```bash
-huggingface-cli download your-username/bfe-pm bfe_pm_seed0_best.pt --local-dir checkpoints/
-huggingface-cli download your-username/bfe-pm bfe_pm_seed1_best.pt --local-dir checkpoints/
-huggingface-cli download your-username/bfe-pm bfe_pm_seed42_best.pt --local-dir checkpoints/
+huggingface-cli download Heng666/bfe-pm bfe_pm_seed0_best.pt --local-dir checkpoints/
+huggingface-cli download Heng666/bfe-pm bfe_pm_seed1_best.pt --local-dir checkpoints/
+huggingface-cli download Heng666/bfe-pm bfe_pm_seed42_best.pt --local-dir checkpoints/
 ```
 
 ### Python Inference

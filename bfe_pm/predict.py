@@ -13,7 +13,7 @@ from .conformal import cqr_interval, load_thresholds, split_conformal_interval
 from .model import BERT_NAME, DualStreamBERT, DualStreamBERTQuantile
 from .preprocess import WEEKDAY_ZH, build_struct_tensor, tokenize_operation
 
-HF_REPO = "your-username/bfe-pm"
+HF_REPO = "Heng666/bfe-pm"
 SEEDS = [0, 1, 42]
 _LOCAL_CACHE = Path.home() / ".cache" / "bfe_pm"
 
