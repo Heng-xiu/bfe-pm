@@ -1,5 +1,5 @@
 {
-  "_note": "Pre-computed conformal thresholds from calibration set (held-out calibration split, seed=42 split)",
+  "_note": "Pre-computed conformal thresholds from a held-out calibration split",
   "split_conformal": {
     "q_hat_min": 76.95,
     "coverage": 0.896,
@@ -16,6 +16,6 @@
     "q_hat_min": 76.33,
     "coverage": 0.901,
     "interval_width_min": 152.7,
-    "note": "Chronological 70/15/15 split; calibration set recent chronological calibration window"
+    "note": "Chronological 70/15/15 split; recent chronological calibration window"
   }
 }

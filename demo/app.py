@@ -24,7 +24,7 @@ plt.rcParams['axes.unicode_minus'] = False
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from bfe_pm import BfePmPredictor
 
-# ── Pre-computed calibration statistics (from paper, held-out calibration split test set) ────────
+# ── Pre-computed calibration statistics from a held-out evaluation split ──────
 PAPER_STATS = {
     "mae_min": 33.8,
     "coverage_90": 89.6,

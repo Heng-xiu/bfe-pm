@@ -190,8 +190,8 @@ predictor = BfePmPredictor(local_checkpoint_dir="checkpoints/")
 ## Conformal Prediction Notes
 
 - **Coverage guarantee applies to elective cases (常規刀) only.** Emergency and urgent cases exhibit residual distribution shift between calibration and deployment sets (Mann-Whitney p < 10⁻⁹), reducing actual coverage to ~80% for emergency cases.
-- Pre-computed thresholds in `checkpoints/conformal_thresholds.json` are from the calibration set (held-out calibration split, random split seed=42). For deployment, re-calibrate on a held-out set from your institution.
-- Temporal validation (chronological 70/15/15 split): all three conformal methods retain valid coverage. CQR: 89.3% at 125.8 min.
+- Pre-computed thresholds in `checkpoints/conformal_thresholds.json` are from a held-out calibration split. For deployment, re-calibrate on a held-out set from your institution.
+- Temporal validation with a recent chronological calibration window: all three conformal methods retain valid coverage. CQR: 89.3% at 125.8 min.
 
 ---
 
