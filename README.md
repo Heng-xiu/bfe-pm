@@ -1,5 +1,7 @@
 # bfe-pm: Surgical Duration Prediction with Conformal Intervals
 
+![bfe-pm end-to-end flow](assets/diagram.png)
+
 **bfe-pm** (*BERT Fusion Ensemble — Procedure Matched*) is a dual-stream neural network for surgical duration prediction, combining MedBERT-KD-Chinese text encoding with structured scheduling features. It provides point predictions and calibrated 90% prediction intervals via conformal prediction.
 
 > **Paper**: *Conformalized Uncertainty Quantification for Surgical Duration Prediction: From Marginal Intervals to Subgroup Exchangeability Failure*
